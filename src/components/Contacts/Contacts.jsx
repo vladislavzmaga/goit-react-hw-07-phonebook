@@ -3,7 +3,7 @@ import { ContactList } from './Contacts.styled';
 import { useSelector } from 'react-redux';
 
 export const ContactsList = () => {
-  const contacts = useSelector(state => state.contacts.contacts);
+  const contacts = useSelector(state => state.contacts.items);
   const filters = useSelector(state => state.contacts.filter);
 
   const filteredContacts = contacts.filter(contact =>

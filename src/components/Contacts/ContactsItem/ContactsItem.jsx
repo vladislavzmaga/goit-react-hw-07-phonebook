@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { deleteContacts } from 'redux/contactsSlice';
+import { deleteContact } from 'redux/contactsSlice';
 
 import {
   ContactsItem,
@@ -12,16 +12,16 @@ import {
 export const ContactsListItem = ({ name, number, id }) => {
   const dispatch = useDispatch();
 
-  const deleteContact = evt => {
+  const deleteUser = evt => {
     const id = evt.target.dataset.id;
-    dispatch(deleteContacts({ id }));
+    dispatch(deleteContact(id));
   };
 
   return (
     <ContactsItem>
       <ContactsName>{name}</ContactsName>
       <ContactTel>{number}</ContactTel>
-      <DeleteBtn type="button" data-id={id} onClick={deleteContact}>
+      <DeleteBtn type="button" data-id={id} onClick={deleteUser}>
         delete
       </DeleteBtn>
     </ContactsItem>

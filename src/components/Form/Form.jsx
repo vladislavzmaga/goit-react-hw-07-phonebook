@@ -2,12 +2,12 @@ import React from 'react';
 import { nanoid } from '@reduxjs/toolkit';
 import Notiflix from 'notiflix';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContacts } from 'redux/contactsSlice';
+import { addContact } from 'redux/contactsSlice';
 
 import { Forms, FormLable, FormInput, FormButton } from './Form.styled';
 
 export const Form = () => {
-  const contacts = useSelector(state => state.contacts.contacts);
+  const contacts = useSelector(state => state.contacts.items);
   const dispatch = useDispatch();
 
   const hundleSubmit = evt => {
@@ -19,11 +19,11 @@ export const Form = () => {
       number,
       id: nanoid(),
     };
-    addContact(newContact);
+    addUser(newContact);
     evt.target.reset();
   };
 
-  const addContact = newContact => {
+  const addUser = newContact => {
     let isContains = false;
     contacts.map(contact => {
       if (contact.name === newContact.name) {
@@ -37,7 +37,7 @@ export const Form = () => {
           `${newContact.name} is already in contacts`,
           'close'
         )
-      : dispatch(addContacts(newContact));
+      : dispatch(addContact(newContact));
   };
 
   return (

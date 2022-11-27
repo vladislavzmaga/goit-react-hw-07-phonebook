@@ -1,21 +1,64 @@
-import users from '../../src/contacts.json';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
-import { createSlice } from '@reduxjs/toolkit';
-// import { persistReducer } from 'redux-persist';
-// import storage from 'redux-persist/lib/storage';
+export const fetchContacts = createAsyncThunk(
+  'contacts/fetchContacts',
+  async function (_, { rejectWithValue }) {
+    try {
+      const response = await axios.get(
+        'https://637ffd382f8f56e28e99cdcb.mockapi.io/contacts'
+      );
+      const contacts = await response.data;
+      return contacts;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteContact = createAsyncThunk(
+  'contacts/deleteContact',
+  async function (id, { rejectWithValue, dispatch }) {
+    try {
+      await axios.delete(
+        `https://637ffd382f8f56e28e99cdcb.mockapi.io/contacts/${id}`
+      );
+      dispatch(deleteContacts({ id }));
+    } catch (error) {
+      return rejectWithValue('Can`t delete contact. Server error');
+    }
+  }
+);
+
+export const addContact = createAsyncThunk(
+  'contacts/addContact',
+  async function (contact, { rejectWithValue, dispatch }) {
+    try {
+      await axios.post(`https://637ffd382f8f56e28e99cdcb.mockapi.io/contacts`, {
+        name: contact.name,
+        number: contact.number,
+      });
+      dispatch(addContacts(contact));
+    } catch (error) {
+      return rejectWithValue('Can`t add contact. Server error');
+    }
+  }
+);
 
 export const contactsSlice = createSlice({
   name: 'contacts',
   initialState: {
-    contacts: users,
+    items: [],
+    isLoading: false,
+    error: null,
     filter: '',
   },
   reducers: {
     addContacts(state, action) {
-      state.contacts.unshift(action.payload);
+      state.items.push(action.payload);
     },
     deleteContacts(state, action) {
-      state.contacts = state.contacts.filter(
+      state.items = state.items.filter(
         contact => contact.id !== action.payload.id
       );
     },
@@ -23,18 +66,27 @@ export const contactsSlice = createSlice({
       state.filter = action.payload;
     },
   },
+  extraReducers: {
+    [fetchContacts.pending]: state => {
+      state.isLoading = true;
+      state.error = null;
+    },
+    [fetchContacts.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.items = action.payload;
+    },
+    [fetchContacts.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [deleteContact.rejected]: (state, action) => {
+      state.error = action.payload;
+    },
+    [addContact.rejected]: (state, action) => {
+      state.error = action.payload;
+    },
+  },
 });
-
-// const persistConfig = {
-//   key: 'contacts',
-//   storage,
-//   whitelist: ['contacts'],
-// };
-
-// export const persistedReducer = persistReducer(
-//   persistConfig,
-//   contactsSlice.reducer
-// );
 
 export const { addContacts, deleteContacts, filteredContacts } =
   contactsSlice.actions;
