@@ -20,10 +20,11 @@ export const deleteContact = createAsyncThunk(
   'contacts/deleteContact',
   async function (id, { rejectWithValue, dispatch }) {
     try {
-      await axios.delete(
+      const response = await axios.delete(
         `https://637ffd382f8f56e28e99cdcb.mockapi.io/contacts/${id}`
       );
       dispatch(deleteContacts({ id }));
+      return response.data;
     } catch (error) {
       return rejectWithValue('Can`t delete contact. Server error');
     }
@@ -34,11 +35,15 @@ export const addContact = createAsyncThunk(
   'contacts/addContact',
   async function (contact, { rejectWithValue, dispatch }) {
     try {
-      await axios.post(`https://637ffd382f8f56e28e99cdcb.mockapi.io/contacts`, {
-        name: contact.name,
-        number: contact.number,
-      });
+      const response = await axios.post(
+        `https://637ffd382f8f56e28e99cdcb.mockapi.io/contacts`,
+        {
+          name: contact.name,
+          number: contact.number,
+        }
+      );
       dispatch(addContacts(contact));
+      return response.data;
     } catch (error) {
       return rejectWithValue('Can`t add contact. Server error');
     }
