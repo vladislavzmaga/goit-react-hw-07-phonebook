@@ -14,6 +14,7 @@ export const ContactsList = () => {
     <ContactList>
       {filteredContacts.map(item => {
         const { name, number, id } = item;
+
         return (
           <ContactsListItem key={id} name={name} number={number} id={id} />
         );

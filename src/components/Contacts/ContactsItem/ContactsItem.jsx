@@ -13,8 +13,8 @@ export const ContactsListItem = ({ name, number, id }) => {
   const dispatch = useDispatch();
 
   const deleteUser = evt => {
-    const id = evt.target.dataset.id;
-    dispatch(deleteContact(id));
+    const currentId = evt.target.dataset.id;
+    dispatch(deleteContact(currentId));
   };
 
   return (

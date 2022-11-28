@@ -36,13 +36,13 @@ export const addContact = createAsyncThunk(
   async function (contact, { rejectWithValue, dispatch }) {
     try {
       const response = await axios.post(
-        `https://637ffd382f8f56e28e99cdcb.mockapi.io/contacts`,
+        'https://637ffd382f8f56e28e99cdcb.mockapi.io/contacts',
         {
           name: contact.name,
           number: contact.number,
         }
       );
-      dispatch(addContacts(contact));
+      dispatch(addContacts(response.data));
       return response.data;
     } catch (error) {
       return rejectWithValue('Can`t add contact. Server error');
